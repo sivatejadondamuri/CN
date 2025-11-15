@@ -1,0 +1,88 @@
+10. Write a Program to implement Dijkstra‘s algorithm to compute the Shortest Path through a graph.
+
+
+
+Aim:
+To write a program that implements Dijkstra’s algorithm for finding the shortest path from a source node to all other nodes in a weighted graph.
+
+Theory:
+Dijkstra’s algorithm is a greedy-based shortest path algorithm used for graphs with non-negative edge weights. It selects the node with the minimum tentative distance, updates the distances of its neighboring nodes, and repeats until all nodes are processed. It is widely used in routing protocols and network path optimization.
+
+C Program:
+
+#include <stdio.h>
+#define INF 9999
+#define MAX 10
+
+int main() {
+    int graph[MAX][MAX], dist[MAX], visited[MAX];
+    int nodes, i, j, count, min, next, src;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &nodes);
+
+    printf("Enter adjacency matrix (use 0 for no edge):\n");
+    for(i = 0; i < nodes; i++) {
+        for(j = 0; j < nodes; j++) {
+            scanf("%d", &graph[i][j]);
+            if(graph[i][j] == 0 && i != j)
+                graph[i][j] = INF;
+        }
+    }
+
+    printf("Enter source node (0 to %d): ", nodes - 1);
+    scanf("%d", &src);
+
+    for(i = 0; i < nodes; i++) {
+        dist[i] = graph[src][i];
+        visited[i] = 0;
+    }
+
+    dist[src] = 0;
+    visited[src] = 1;
+    count = 1;
+
+    while(count < nodes) {
+        min = INF;
+
+        for(i = 0; i < nodes; i++)
+            if(dist[i] < min && !visited[i]) {
+                min = dist[i];
+                next = i;
+            }
+
+        visited[next] = 1;
+
+        for(i = 0; i < nodes; i++)
+            if(!visited[i])
+                if(min + graph[next][i] < dist[i])
+                    dist[i] = min + graph[next][i];
+
+        count++;
+    }
+
+    printf("\nShortest distances from source node %d:\n", src);
+    for(i = 0; i < nodes; i++)
+        printf("Node %d : %d\n", i, dist[i]);
+
+    return 0;
+}
+
+Expected Output:
+
+Enter number of nodes: 5
+Enter adjacency matrix:
+0 10 0 30 100
+10 0 50 0 0
+0 50 0 20 10
+30 0 20 0 60
+100 0 10 60 0
+
+Enter source node (0 to 4): 0
+
+Shortest distances from source node 0:
+Node 0 : 0
+Node 1 : 10
+Node 2 : 50
+Node 3 : 30
+Node 4 : 60

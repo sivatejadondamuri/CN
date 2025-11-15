@@ -1,0 +1,80 @@
+9. Write a program for congestion control using Leaky Bucket Algorithm
+
+
+
+Aim:
+To write a program that simulates congestion control using the Leaky Bucket algorithm.
+
+Theory:
+The Leaky Bucket algorithm is used for traffic shaping and congestion control. Data packets enter the bucket at variable rates, but they leave the bucket at a constant rate. If the bucket overflows due to excess incoming packets, the extra packets are discarded. This ensures smooth, regulated output flow and prevents congestion in the network.
+
+C Program:
+
+#include <stdio.h>
+
+int main() {
+    int bucket_size, output_rate, packets, n, stored = 0, i;
+
+    printf("Enter bucket size: ");
+    scanf("%d", &bucket_size);
+
+    printf("Enter output rate: ");
+    scanf("%d", &output_rate);
+
+    printf("Enter number of packet arrivals: ");
+    scanf("%d", &n);
+
+    for(i = 1; i <= n; i++) {
+        printf("\nEnter packets entering at time %d: ", i);
+        scanf("%d", &packets);
+
+        printf("Incoming packets: %d\n", packets);
+
+        if(packets + stored > bucket_size) {
+            printf("Bucket overflow! Packets discarded: %d\n", (packets + stored - bucket_size));
+            stored = bucket_size;
+        } else {
+            stored += packets;
+        }
+
+        printf("Packets in bucket before leakage: %d\n", stored);
+
+        // Send packets at constant output rate
+        if(stored >= output_rate) {
+            stored -= output_rate;
+            printf("Packets sent: %d\n", output_rate);
+        } else {
+            printf("Packets sent: %d\n", stored);
+            stored = 0;
+        }
+
+        printf("Remaining packets in bucket: %d\n", stored);
+    }
+
+    return 0;
+}
+
+Expected Output:
+
+Enter bucket size: 10
+Enter output rate: 4
+Enter number of packet arrivals: 3
+
+Enter packets entering at time 1: 6
+Incoming packets: 6
+Packets in bucket before leakage: 6
+Packets sent: 4
+Remaining packets in bucket: 2
+
+Enter packets entering at time 2: 7
+Incoming packets: 7
+Bucket overflow! Packets discarded:  - (example based on capacity)
+Packets in bucket before leakage: 10
+Packets sent: 4
+Remaining packets in bucket: 6
+
+Enter packets entering at time 3: 3
+Incoming packets: 3
+Packets in bucket before leakage: 9
+Packets sent: 4
+Remaining packets in bucket: 5

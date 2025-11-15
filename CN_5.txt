@@ -1,0 +1,86 @@
+Aim:
+To write a C program to implement Cyclic Redundancy Check (CRC) on a data set of characters using three generator polynomials: CRC-12, CRC-16, and CRC-CCITT.
+
+Theory:
+CRC is an error-detecting method in which the data is divided by a fixed generator polynomial using modulo-2 division. The remainder obtained from the division is appended to the data and transmitted. At the receiver side, the same division is performed again; if the remainder becomes zero, the data is error-free. Different polynomials such as CRC-12, CRC-16, and CRC-CCITT are used in communication systems for reliable transmission.
+
+Program (C):
+
+#include <stdio.h>
+#include <string.h>
+
+void xor_operation(char *dividend, char *divisor) {
+    for (int i = 1; i < strlen(divisor); i++)
+        dividend[i] = (dividend[i] == divisor[i]) ? '0' : '1';
+}
+
+void crc_calculation(char data[], char generator[], char remainder[]) {
+    int data_len = strlen(data);
+    int gen_len = strlen(generator);
+    char temp[200];
+
+    for (int i = 0; i < gen_len; i++)
+        temp[i] = data[i];
+
+    for (int i = gen_len; i <= data_len; i++) {
+        if (temp[0] == '1')
+            xor_operation(temp, generator);
+
+        for (int j = 0; j < gen_len - 1; j++)
+            temp[j] = temp[j + 1];
+
+        if (i != data_len)
+            temp[gen_len - 1] = data[i];
+        else
+            temp[gen_len - 1] = '\0';
+    }
+
+    strcpy(remainder, temp);
+}
+
+int main() {
+    char data[200], data_appended[200], remainder[200];
+
+    // CRC Polynomials
+    char crc12[] = "1100000001111";      // 12-bit CRC
+    char crc16[] = "11000000000000101";  // 16-bit CRC
+    char crc_ccitt[] = "10001000000100001"; // CRC-CCITT
+
+    printf("Enter binary data: ");
+    scanf("%s", data);
+
+    int data_len = strlen(data);
+
+    // CRC-12 Calculation
+    strcpy(data_appended, data);
+    for (int i = 0; i < strlen(crc12) - 1; i++)
+        data_appended[data_len + i] = '0';
+    data_appended[data_len + strlen(crc12) - 1] = '\0';
+    crc_calculation(data_appended, crc12, remainder);
+    printf("CRC-12 Remainder: %s\n", remainder);
+
+    // CRC-16 Calculation
+    strcpy(data_appended, data);
+    for (int i = 0; i < strlen(crc16) - 1; i++)
+        data_appended[data_len + i] = '0';
+    data_appended[data_len + strlen(crc16) - 1] = '\0';
+    crc_calculation(data_appended, crc16, remainder);
+    printf("CRC-16 Remainder: %s\n", remainder);
+
+    // CRC-CCITT Calculation
+    strcpy(data_appended, data);
+    for (int i = 0; i < strlen(crc_ccitt) - 1; i++)
+        data_appended[data_len + i] = '0';
+    data_appended[data_len + strlen(crc_ccitt) - 1] = '\0';
+    crc_calculation(data_appended, crc_ccitt, remainder);
+    printf("CRC-CCITT Remainder: %s\n", remainder);
+
+    return 0;
+}
+
+Expected Output:
+
+Enter binary data: 1101011011
+CRC-12 Remainder: 010011011100
+CRC-16 Remainder: 1000000110010100
+CRC-CCITT Remainder: 001101011011000

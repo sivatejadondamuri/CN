@@ -1,0 +1,88 @@
+Aim:
+To write a C program to implement the Selective Repeat sliding window protocol for reliable data transmission.
+
+Theory:
+Selective Repeat is a sliding window protocol where the sender transmits multiple frames within a window and retransmits only the specific frames that are lost or corrupted. The receiver accepts correct frames even if they arrive out of order, stores them, and sends acknowledgements individually. This improves efficiency compared to Go-Back-N by avoiding unnecessary retransmissions.
+
+Program (C):
+
+#include <stdio.h>
+
+int main() {
+    int total_frames, window_size, i, j, error;
+
+    printf("Enter total number of frames: ");
+    scanf("%d", &total_frames);
+
+    printf("Enter window size: ");
+    scanf("%d", &window_size);
+
+    int ack[100] = {0};
+
+    i = 1;
+    while (i <= total_frames) {
+
+        printf("\nSender sends frames: ");
+        for (j = i; j < i + window_size && j <= total_frames; j++)
+            if (ack[j] == 0)
+                printf("%d ", j);
+
+        printf("\nEnter error frame number (0 for no error): ");
+        scanf("%d", &error);
+
+        if (error >= i && error < i + window_size && error <= total_frames) {
+            printf("Error detected at frame %d\n", error);
+            ack[error] = 0;
+        }
+
+        for (j = i; j < i + window_size && j <= total_frames; j++) {
+            if (j != error) {
+                ack[j] = 1;
+                printf("Ack received for frame %d\n", j);
+            }
+        }
+
+        printf("\nRetransmitting only unacknowledged frames...\n");
+        for (j = i; j < i + window_size && j <= total_frames; j++) {
+            if (ack[j] == 0) {
+                printf("Retransmitting frame %d\n", j);
+                ack[j] = 1;
+                printf("Ack received for frame %d\n", j);
+            }
+        }
+
+        i = i + window_size;
+    }
+
+    printf("\nAll frames sent successfully.\n");
+
+    return 0;
+}
+
+Expected Output:
+
+Enter total number of frames: 8
+Enter window size: 3
+
+Sender sends frames: 1 2 3
+Enter error frame number (0 for no error): 2
+Error detected at frame 2
+Ack received for frame 1
+Ack received for frame 3
+
+Retransmitting only unacknowledged frames...
+Retransmitting frame 2
+Ack received for frame 2
+
+Sender sends frames: 4 5 6
+Enter error frame number (0 for no error): 0
+Ack received for frame 4
+Ack received for frame 5
+Ack received for frame 6
+
+Sender sends frames: 7 8
+Enter error frame number (0 for no error): 0
+Ack received for frame 7
+Ack received for frame 8
+
+All frames sent successfully.

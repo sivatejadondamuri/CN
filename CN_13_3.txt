@@ -1,0 +1,86 @@
+13 (C). Viewing Captured Traffic
+
+Aim:
+To write a program that reads a saved pcap file and displays essential packet details such as timestamp, length, Ethernet type, and IP header information.
+
+Theory:
+Viewing captured traffic involves analyzing packets stored in a pcap file. Using the libpcap library, packets can be opened offline and processed one by one. Each packet contains headers for Ethernet, IP, ARP, etc. By decoding these headers, useful information like source/destination IP and protocol type can be displayed, similar to Wireshark’s packet details panel.
+
+C Program:
+
+#include <pcap.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <netinet/ip.h>
+#include <netinet/if_ether.h>
+#include <arpa/inet.h>
+
+void packet_handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet) {
+    struct ether_header *eth_header;
+    eth_header = (struct ether_header *) packet;
+
+    printf("Packet captured at %ld.%06ld seconds\n", header->ts.tv_sec, header->ts.tv_usec);
+    printf("Packet length: %d bytes\n", header->len);
+
+    if (ntohs(eth_header->ether_type) == ETHERTYPE_IP) {
+        struct ip *ip_header = (struct ip *)(packet + sizeof(struct ether_header));
+        printf("Source IP: %s\n", inet_ntoa(ip_header->ip_src));
+        printf("Destination IP: %s\n", inet_ntoa(ip_header->ip_dst));
+        printf("Protocol: %d\n", ip_header->ip_p);
+    } else if (ntohs(eth_header->ether_type) == ETHERTYPE_ARP) {
+        printf("ARP packet detected.\n");
+    } else {
+        printf("Non-IP packet: 0x%04x\n", ntohs(eth_header->ether_type));
+    }
+
+    printf("\n");
+}
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s <pcap file>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    char errbuff[PCAP_ERRBUF_SIZE];
+    pcap_t *handle = pcap_open_offline(argv[1], errbuff);
+    if (!handle) {
+        fprintf(stderr, "Error opening pcap file: %s\n", errbuff);
+        return EXIT_FAILURE;
+    }
+
+    printf("Reading packets from %s...\n\n", argv[1]);
+
+    if (pcap_loop(handle, 0, packet_handler, NULL) < 0) {
+        fprintf(stderr, "Error reading packets: %s\n", pcap_geterr(handle));
+        pcap_close(handle);
+        return EXIT_FAILURE;
+    }
+
+    pcap_close(handle);
+
+    printf("Capture file processing complete.\n");
+    return EXIT_SUCCESS;
+}
+
+Expected Output:
+
+Reading packets from sample.pcap...
+
+Packet captured at 1700054123.123456 seconds
+Packet length: 74 bytes
+Source IP: 192.168.1.10
+Destination IP: 142.250.183.14
+Protocol: 6
+
+Packet captured at 1700054123.234567 seconds
+Packet length: 60 bytes
+ARP packet detected.
+
+Packet captured at 1700054123.345678 seconds
+Packet length: 98 bytes
+Source IP: 192.168.1.10
+Destination IP: 8.8.8.8
+Protocol: 17
+
+Capture file processing complete.

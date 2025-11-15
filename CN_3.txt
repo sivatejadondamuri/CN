@@ -1,0 +1,61 @@
+Aim:
+To write a C program to implement the checksum method used in data link layer framing for error detection.
+
+Theory:
+Checksum is an error-detecting technique where the data is divided into equal-sized blocks and added using 1’s complement arithmetic. The 1’s complement of the final sum is transmitted as the checksum. At the receiver side, the received blocks and checksum are added again. If the result is all 1’s, the data is considered error-free.
+
+Program (C):
+
+#include <stdio.h>
+
+int main() {
+    int data1, data2, sum, checksum, recv1, recv2, recv_checksum, temp;
+
+    printf("Enter first data block: ");
+    scanf("%d", &data1);
+
+    printf("Enter second data block: ");
+    scanf("%d", &data2);
+
+    sum = data1 + data2;
+    temp = sum;
+
+    // Wrap around carry
+    if (sum >= 256)
+        sum = (sum % 256) + 1;
+
+    checksum = 255 - sum;
+    
+    printf("Checksum generated: %d\n", checksum);
+
+    printf("Enter received data block 1: ");
+    scanf("%d", &recv1);
+
+    printf("Enter received data block 2: ");
+    scanf("%d", &recv2);
+
+    printf("Enter received checksum: ");
+    scanf("%d", &recv_checksum);
+
+    int recv_sum = recv1 + recv2 + recv_checksum;
+
+    if (recv_sum >= 256)
+        recv_sum = (recv_sum % 256) + 1;
+
+    if (recv_sum == 255)
+        printf("No Error Detected\n");
+    else
+        printf("Error Detected\n");
+
+    return 0;
+}
+
+Expected Output:
+
+Enter first data block: 120
+Enter second data block: 80
+Checksum generated: 55
+Enter received data block 1: 120
+Enter received data block 2: 80
+Enter received checksum: 55
+No Error Detected

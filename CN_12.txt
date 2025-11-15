@@ -1,0 +1,77 @@
+12. Write a Program to implement Broadcast Tree by taking a subnet of hosts.
+
+
+
+Aim:
+To write a program that constructs a broadcast tree (minimum spanning tree) for a given subnet of hosts using Prim’s algorithm.
+
+Theory:
+A broadcast tree is a spanning tree that connects all hosts in a subnet with the minimum total link cost. It is used to optimize broadcast communication by reducing redundant transmissions. Minimum Spanning Tree (MST) algorithms like Prim’s or Kruskal’s are commonly used to construct broadcast trees. The MST ensures minimal cost paths connecting all nodes without forming cycles.
+
+C Program (Using Prim’s Algorithm):
+
+#include <stdio.h>
+
+#define INF 9999
+#define MAX 10
+
+int main() {
+    int cost[MAX][MAX], visited[MAX] = {0};
+    int i, j, nodes, edges = 0;
+    int min, a, b, total = 0;
+
+    printf("Enter number of hosts (nodes): ");
+    scanf("%d", &nodes);
+
+    printf("Enter cost adjacency matrix (999 for no direct link):\n");
+    for(i = 0; i < nodes; i++)
+        for(j = 0; j < nodes; j++)
+            scanf("%d", &cost[i][j]);
+
+    visited[0] = 1;
+
+    printf("\nBroadcast Tree (Minimum Spanning Tree):\n");
+    printf("Edge \t Cost\n");
+
+    while(edges < nodes - 1) {
+        min = INF;
+
+        for(i = 0; i < nodes; i++) {
+            if(visited[i]) {
+                for(j = 0; j < nodes; j++) {
+                    if(!visited[j] && cost[i][j] < min) {
+                        min = cost[i][j];
+                        a = i;
+                        b = j;
+                    }
+                }
+            }
+        }
+
+        printf("%d -- %d \t %d\n", a, b, min);
+        visited[b] = 1;
+        total += min;
+        edges++;
+    }
+
+    printf("\nTotal Cost of Broadcast Tree: %d\n", total);
+
+    return 0;
+}
+
+Expected Output:
+
+Enter number of hosts (nodes): 4
+Enter cost adjacency matrix:
+0 4 999 6
+4 0 3 999
+999 3 0 2
+6 999 2 0
+
+Broadcast Tree (Minimum Spanning Tree):
+Edge     Cost
+0 -- 1    4
+1 -- 2    3
+2 -- 3    2
+
+Total Cost of Broadcast Tree: 9

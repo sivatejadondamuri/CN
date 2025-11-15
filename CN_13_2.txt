@@ -1,0 +1,26 @@
+13 (B). Starting Wireshark
+
+Aim:
+To write a program that launches the Wireshark application from a C program using system commands.
+
+Theory:
+Wireshark is a GUI-based network protocol analyzer. It can be started manually or through system commands. Using the system() function in C, external applications can be executed from within a program. This allows automating the launch of Wireshark for packet capturing and analysis. The program runs Wireshark in the background and confirms whether it started successfully.
+
+C Program:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int ret = system("wireshark &"); 
+    if (ret == -1) {
+        perror("Failed to start Wireshark");
+        return 1;
+    }
+    printf("Wireshark launched successfully.");
+    return 0;
+}
+
+Expected Output:
+
+Wireshark launched successfully.

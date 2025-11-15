@@ -1,0 +1,78 @@
+Experiment: Study of Network Devices in Detail and Connect the Computers in Local Area Network
+
+Aim
+
+To study various network devices and to connect multiple computers to form a Local Area Network (LAN).
+
+Apparatus Required
+
+Computers with NIC cards, Switch/Hub, Ethernet cables (Cat5e/Cat6), Router (optional), RJ-45 connectors, Crimping tool (if required).
+
+Theory
+
+A Local Area Network (LAN) is a network that connects computers within a limited area such as a laboratory, building, or office. Several networking devices are used to establish communication and enable the transfer of data between connected systems. The major network devices used in LAN setup are described below.
+
+1. Network Interface Card (NIC)
+
+NIC is a hardware device installed in each computer to connect it to a network. It provides a unique MAC address and converts digital data from the computer into signals suitable for transmission over network cables.
+
+2. Hub
+
+A hub is a basic networking device used to connect multiple computers. It broadcasts incoming data to all connected devices without filtering. It operates at the Physical Layer and is rarely used today due to lower efficiency.
+
+3. Switch
+
+A switch is an advanced device that connects multiple computers in a network. Unlike a hub, it forwards data only to the specific destination device using MAC addresses. It reduces network collisions and improves performance. It operates at the Data Link Layer and is widely used in LANs.
+
+4. Router
+
+A router connects different networks, such as a LAN and the Internet. It routes data based on IP addresses and provides services like DHCP, NAT, and basic network security. It operates at the Network Layer.
+
+5. Bridge
+
+A bridge is used to connect two separate LAN segments. It filters and forwards data based on MAC addresses to reduce network traffic.
+
+6. Repeater
+
+A repeater amplifies and regenerates weak signals in a network. It is used to extend the physical length of a LAN cable beyond its normal limit.
+
+7. Access Point (AP)
+
+An Access Point provides wireless connectivity within a LAN. It allows wireless devices such as laptops and mobile devices to join the wired network.
+
+8. Modem
+
+A modem converts digital signals from a computer into analog signals for transmission over telephone lines and converts analog signals back to digital form. It is commonly used for Internet connectivity.
+
+Procedure
+
+1. Place the switch at a central location in the lab.
+
+
+2. Connect each computer’s Ethernet port to the switch using Cat5e/Cat6 cables.
+
+
+3. If Internet access is required, connect the switch to the router.
+
+
+4. Assign IP addresses to each computer in the same network range.
+Example:
+PC1 → 192.168.1.2
+PC2 → 192.168.1.3
+Subnet Mask → 255.255.255.0
+Default Gateway (if router is used) → 192.168.1.1
+
+
+5. Enable network discovery and file sharing on each computer.
+
+
+6. Verify communication between computers using the ping command.
+Example:
+ping 192.168.1.3
+Successful replies indicate proper LAN connectivity.
+
+
+
+Result
+
+The network devices were studied in detail, and multiple computers were successfully connected in a Local Area Network. Communication between the systems was verified using the ping command

@@ -1,0 +1,55 @@
+13. i. Packet Capture Using Wireshark
+
+Aim:
+To write a program that captures network packets using the pcap library and demonstrates basic packet sniffing similar to Wireshark.
+
+Theory:
+Packet capturing is the process of intercepting and logging traffic passing over a digital network. Libraries like libpcap provide low-level access to network packets. The program opens a network interface in promiscuous mode and captures packets. Each captured packet triggers a callback function, which can be used to analyze or store packet data. This forms the basis for tools like Wireshark.
+
+C Program:
+
+#include <pcap.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void packet_handler(u_char *user, const struct pcap_pkthdr *header, const u_char *packet) {
+    printf("Packet captured. Length: %d\n", header->len);
+}
+
+int main() {
+    char errbuf[PCAP_ERRBUF_SIZE];
+    pcap_t *handle;
+    char *dev;
+
+    dev = pcap_lookupdev(errbuf);
+    if (dev == NULL) {
+        fprintf(stderr, "Couldn't find device: %s\n", errbuf);
+        return 1;
+    }
+    printf("Capturing on device: %s\n", dev);
+
+    handle = pcap_open_live(dev, 65536, 1, 1000, errbuf);
+    if (handle == NULL) {
+        fprintf(stderr, "Couldn't open device: %s\n", errbuf);
+        return 2;
+    }
+
+    pcap_loop(handle, 10, packet_handler, NULL);
+
+    pcap_close(handle);
+    return 0;
+}
+
+Expected Output:
+
+Capturing on device: eth0
+Packet captured. Length: 74
+Packet captured. Length: 98
+Packet captured. Length: 60
+Packet captured. Length: 151
+Packet captured. Length: 87
+Packet captured. Length: 66
+Packet captured. Length: 60
+Packet captured. Length: 109
+Packet captured. Length: 92
+Packet captured. Length: 60

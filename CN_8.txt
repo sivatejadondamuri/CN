@@ -1,0 +1,55 @@
+8. Write a Program to implement Stop and Wait Protocol.
+
+
+
+Aim:
+To write a program that simulates the Stop and Wait ARQ protocol for reliable data transmission in the data link layer.
+
+Theory:
+Stop and Wait ARQ is the simplest flow-control and error-control protocol. The sender transmits one frame and waits for an acknowledgment before sending the next. If an acknowledgment is not received within a timeout period, the sender retransmits the frame. This ensures reliable communication but results in low efficiency for long-distance or high-speed links.
+
+C Program:
+
+#include <stdio.h>
+
+int main() {
+    int frames, i;
+    printf("Enter number of frames to send: ");
+    scanf("%d", &frames);
+
+    for(i = 1; i <= frames; i++) {
+        printf("\nSender: Sending frame %d", i);
+        printf("\nReceiver: Frame %d received", i);
+        printf("\nReceiver: Sending ACK for frame %d\n", i);
+        printf("Sender: ACK for frame %d received\n", i);
+    }
+
+    printf("\nAll frames sent successfully using Stop and Wait Protocol.\n");
+    return 0;
+}
+
+Expected Output:
+
+Enter number of frames to send: 4
+
+Sender: Sending frame 1
+Receiver: Frame 1 received
+Receiver: Sending ACK for frame 1
+Sender: ACK for frame 1 received
+
+Sender: Sending frame 2
+Receiver: Frame 2 received
+Receiver: Sending ACK for frame 2
+Sender: ACK for frame 2 received
+
+Sender: Sending frame 3
+Receiver: Frame 3 received
+Receiver: Sending ACK for frame 3
+Sender: ACK for frame 3 received
+
+Sender: Sending frame 4
+Receiver: Frame 4 received
+Receiver: Sending ACK for frame 4
+Sender: ACK for frame 4 received
+
+All frames sent successfully using Stop and Wait Protocol.

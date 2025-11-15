@@ -1,0 +1,64 @@
+Aim:
+To write a C program to generate the Hamming Code for error detection and correction.
+
+Theory:
+Hamming Code is an error-detecting and error-correcting code that adds parity bits at specific positions (1, 2, 4, 8…). These parity bits cover different combinations of data bits. Using even parity, each parity bit ensures that the number of 1s in its covered positions is even. At the receiver side, the parity bits are checked again to identify any single-bit error and correct it.
+
+Program (C):
+
+#include <stdio.h>
+#include <math.h>
+
+int main() {
+    int data[20], hamming[20], r = 0, m, i, j, k, pos;
+
+    printf("Enter number of data bits: ");
+    scanf("%d", &m);
+
+    printf("Enter data bits (LSB first): ");
+    for (i = 1; i <= m; i++)
+        scanf("%d", &data[i]);
+
+    // Find number of parity bits
+    while (pow(2, r) < (m + r + 1))
+        r++;
+
+    // Initialize hamming array
+    j = 1;
+    k = 1;
+    for (i = 1; i <= m + r; i++) {
+        if (i == pow(2, k)) {
+            hamming[i] = 0; // parity placeholder
+            k++;
+        } else {
+            hamming[i] = data[j++];
+        }
+    }
+
+    // Calculate parity bits (even parity)
+    for (i = 0; i < r; i++) {
+        pos = pow(2, i);
+        int count = 0;
+        for (j = pos; j <= m + r; j += pos * 2) {
+            for (k = j; k < j + pos && k <= m + r; k++) {
+                if (hamming[k] == 1)
+                    count++;
+            }
+        }
+        hamming[pos] = count % 2; // even parity
+    }
+
+    printf("Generated Hamming Code: ");
+    for (i = m + r; i >= 1; i--)
+        printf("%d", hamming[i]);
+
+    printf("\n");
+
+    return 0;
+}
+
+Expected Output:
+
+Enter number of data bits: 4
+Enter data bits (LSB first): 1 0 1 1
+Generated Hamming Code: 1011011
